@@ -52,7 +52,7 @@ statebins <- function(state_data,
 
   state_data <- data.frame(state_data, stringsAsFactors=FALSE)
 
-  if (max(nchar(state_data[,state_col])) <= 3) {
+  if (max(nchar(state_data[,state_col])) <= 2) {
     merge.x <- "abbrev"
   } else {
     merge.x <- "state"

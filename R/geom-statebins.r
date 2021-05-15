@@ -117,7 +117,7 @@ GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
 
     state_data <- data.frame(data, stringsAsFactors=FALSE)
 
-    if (max(nchar(state_data[,"state"])) <= 3) {
+    if (max(nchar(state_data[,"state"])) <= 2) {
       merge.x <- "abbrev"
     } else {
       merge.x <- "state"
