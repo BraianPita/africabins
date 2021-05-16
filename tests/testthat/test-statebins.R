@@ -9,14 +9,14 @@ test_that("we can do something", {
   edges <- read.csv(file = "countries_africa.csv")
 
 
-  edges <- edges %>% filter(Source == "NGA" & value != 0.0) %>%
+  edges <- edges %>% filter((Target == "NGA" | Source == "NGA") & value != 0.0) %>%
     mutate(category = case_when(value > median(value) + (2 * sd(value)) ~ "High",
                                 TRUE ~ "Low")) %>%
     arrange(value) %>%
     select(Target, value, category) %>%
     mutate(category = case_when(category == "High" ~ 1,
                                 category == "Low" ~ 2)) %>%
-    filter(!Target %in% c("ESH", "MYT", "REU", "SHN"))
+    filter(!duplicated(Target))
 
   rownames(edges) <- edges$Target
 
