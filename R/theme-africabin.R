@@ -1,4 +1,4 @@
-#' Base statebins theme
+#' Base africabins theme
 #'
 #' Clears out most of the cruft. Builds off of `theme_bw()`
 #'
@@ -6,7 +6,7 @@
 #' @param legend_position fills in `legend.position`
 #' @param base_family,base_size same as `theme_bw()`
 #' @export
-theme_statebins <- function(legend_position="bottom",
+theme_africabins <- function(legend_position="bottom",
                             base_size = 11,
                             base_family = "") {
 

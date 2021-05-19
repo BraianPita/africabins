@@ -17,25 +17,25 @@
     )
 }
 
-# sanity checks for state values
-validate_states <- function(state_data, state_col, merge.x, ignore_dups=FALSE) {
+# sanity checks for country values
+validate_countries <- function(country_data, country_col, merge.x, ignore_dups=FALSE) {
 
-  good_states <- state_data[,state_col] %in% state_coords[,merge.x]
-  if (any(!good_states)) {
-    invalid <- state_data[,state_col][which(!good_states)]
-    state_data <- state_data[which(good_states),]
-    warning("Found invalid state values: ", invalid)
+  good_countries <- country_data[,country_col] %in% country_coords[,merge.x]
+  if (any(!good_countries)) {
+    invalid <- country_data[,country_col][which(!good_countries)]
+    country_data <- country_data[which(good_countries),]
+    warning("Found invalid country values: ", invalid)
   }
 
   if (!ignore_dups) {
-    dups <- duplicated(state_data[,state_col])
+    dups <- duplicated(country_data[,country_col])
     if (any(dups)) {
-      state_data <- state_data[which(!dups),]
-      warning("Removing duplicate state rows")
+      country_data <- country_data[which(!dups),]
+      warning("Removing duplicate country rows")
     }
   }
 
-  return(state_data)
+  return(country_data)
 
 }
 

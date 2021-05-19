@@ -1,12 +1,12 @@
-#' A statebins Geom
+#' A africabins Geom
 #'
-#' Pass in a data frame of states and values and let this do the work. It enables
+#' Pass in a data frame of countries and values and let this do the work. It enables
 #' easy faceting and makes it simpler to have a uniform legend across all the
 #' plots.\cr
 #' \cr
 #' There are two special/critical `aes()` mappings:\cr
 #' \cr
-#' - `state` (so the geom knows which column to map the state names/abbrevs to)
+#' - `country` (so the geom knows which column to map the country names/abbrevs to)
 #' - `fill` (which column you're mapping the filling for the squares with)
 #'
 #' @md
@@ -27,8 +27,9 @@
 #'    A `function` will be called with a single argument,
 #'    the plot data. The return value must be a `data.frame.`, and
 #'    will be used as the layer data.
-#' @param border_col border color of the state squares, default "`white`"
-#' @param border_size thickness of the square state borders
+#'
+#' @param border_col border color of the country squares, default "`white`"
+#' @param border_size thickness of the square country borders
 #' @param lbl_size font size (relative) of the label text
 #' @param dark_lbl,light_lbl colrs to be uses when the label should be dark or light.
 #'        The function automagically computes when this should be.
@@ -50,26 +51,26 @@
 #'   the default plot specification, e.g. `borders()`.
 #' @export
 #' @examples \dontrun{
-#' library(statebins)
+#' library(africabins)
 #' library(cdcfluview)
 #' library(hrbrthemes)
 #' library(tidyverse)
 #'
 #' flu <- ili_weekly_activity_indicators(2017)
 #'
-#' ggplot(flu, aes(state=statename, fill=activity_level)) +
-#'   geom_statebins() +
+#' ggplot(flu, aes(country=countryname, fill=activity_level)) +
+#'   geom_africabins() +
 #'   coord_equal() +
 #'   viridis::scale_fill_viridis(
 #'     name = "ILI Activity Level  ", limits=c(0,10), breaks=0:10, option = "magma", direction = -1
 #'   ) +
 #'   facet_wrap(~weekend) +
 #'   labs(title="2017-18 Flu Season ILI Activity Level") +
-#'   theme_statebins(base_family = font_ps) +
+#'   theme_africabins(base_family = font_ps) +
 #'   theme(plot.title=element_text(size=16, hjust=0)) +
 #'   theme(plot.margin = margin(30,30,30,30))
 #' }
-geom_statebins <- function(
+geom_africabins <- function(
   mapping = NULL, data = NULL,
   border_col = "white", border_size = 2,
   lbl_size = 3, dark_lbl = "black", light_lbl = "white",
@@ -81,7 +82,7 @@ geom_statebins <- function(
     data = data,
     mapping = mapping,
     stat = "identity",
-    geom = GeomStatebins,
+    geom = Geomafricabins,
     position = "identity",
     show.legend = show.legend,
     inherit.aes = inherit.aes,
@@ -98,35 +99,35 @@ geom_statebins <- function(
   )
 }
 
-#' @rdname geom_statebins
+#' @rdname geom_africabins
 #' @export
-GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
+Geomafricabins <- ggplot2::ggproto("Geomafricabins", ggplot2::Geom,
 
   default_aes = ggplot2::aes(
     fill = "grey20", colour = NA, size = 0.1, linetype = 1,
-    state = "state", label="abbrev", angle = 0, hjust = 0.5,
+    country = "country", label="abbrev", angle = 0, hjust = 0.5,
     vjust = 0.5, alpha = NA, family = "", fontface = 1, lineheight = 1.2
   ),
 
   extra_params = c("na.rm", "width", "height"),
 
-  setup_data = function(data, params) {
+  setup_data = function(data, country_type = "iso3", params) {
 
     # message("setup_data()")
     # saveRDS(data, "/tmp/data.rds")
 
-    state_data <- data.frame(data, stringsAsFactors=FALSE)
+    country_data <- data.frame(data, stringsAsFactors=FALSE)
 
-    if (max(nchar(state_data[,"state"])) <= 2) {
+    if (country_type == "iso2") {
       merge.x <- "abbrev"
-    } else {
-      merge.x <- "state"
+    } else if (country_type == "iso3") {
+      merge.x <- "country"
     }
 
-    state_data <- validate_states(state_data, "state", merge.x, ignore_dups=TRUE)
+    country_data <- validate_countries(country_data, "country", merge.x, ignore_dups=TRUE)
 
-    st.dat <- merge(b_state_coords, state_data,
-                    by.x=merge.x, by.y="state", all.y=TRUE, sort=TRUE)
+    st.dat <- merge(b_country_coords, country_data,
+                    by.x=merge.x, by.y="country", all.y=TRUE, sort=TRUE)
 
     st.dat$width <- st.dat$width %||% params$width %||% ggplot2::resolution(st.dat$x, FALSE)
     st.dat$height <- st.dat$height %||% params$height %||% ggplot2::resolution(st.dat$y, FALSE)
@@ -142,7 +143,7 @@ GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
 
   },
 
-  required_aes = c("state", "fill"),
+  required_aes = c("country", "fill"),
 
   draw_panel = function(self, data, panel_params, coord,
                         border_col = "white", border_size = 2,
@@ -166,7 +167,7 @@ GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
       ggplot2::GeomText$draw_panel(text_data, panel_params, coord)
     ) -> grobs
 
-    ggname("geom_statebins", grid::grobTree(children = grobs))
+    ggname("geom_africabins", grid::grobTree(children = grobs))
 
   },
 
