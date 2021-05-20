@@ -1,10 +1,10 @@
-#' Create a new ggplot-based "countrybin" chart for USA countries/territories
+#' Create a new ggplot-based "africabins" chart for African countries/territories
 #'
 #' Pass in a data frame and get back a square choropleth.
 #'
 #' The `country_col` and `value_col` parameters default to `country` and `value`. That means
 #' if you name the columns you want to plot with those names, you can forego passing them
-#' in. Othersise, use `"strings"`.
+#' in. Otherwise, use `"strings"`.
 #'
 #' A _handy_ feature of this function is that you can specify a `dark_label` color
 #' and a `light_label` color. What does that mean? Well, you also pass in the
@@ -21,7 +21,7 @@
 #' @param country_data data frame of countries and values to plot
 #' @param country_type data format used for the country names (iso2 or iso3)
 #' @param country_col column name in \code{country_data} that has the countries. no duplicates
-#'        and can be names (e.g. "\code{Maine}") or abbreviatons (e.g. "\code{ME}")
+#'        and can be names in ISO3 (e.g. "\code{ZAF}") or abbreviatons (ISO2) (e.g. "\code{ZA}")
 #' @param value_col column name in \code{country_data} that holds the values to be plotted
 #' @param dark_label,light_label,na_label dark/light/NA label colors. The specified color will be used
 #'        when the algorithm determines labels should be inverted.
@@ -42,6 +42,7 @@
 #' USArrests$country <- rownames(USArrests)
 #' africabins(USArrests, value_col="Assault", name = "Assault") +
 #'   theme_africabins(legend_position="right")
+#'
 africabins <- function(country_data, country_type = "iso3",
                       country_col="country", value_col="value",
                       dark_label="black", light_label="white",
